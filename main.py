@@ -32,6 +32,7 @@ class Parser:
         self.expr_list = []
 
     def skip_ws(self):
+        last = len(self.rest)
         for id, i in enumerate(self.rest):
             if i == ' ':
                 self.col += 1
@@ -39,8 +40,9 @@ class Parser:
                 self.row += 1
                 self.col = 1
             else:
-                self.rest = self.rest[id:]
+                last = id
                 break
+        self.rest = self.rest[last:]
 
     def expect(self, sub, hard=False):
         self.skip_ws()
@@ -123,6 +125,7 @@ class Parser:
                 self.expr.body = res
             self.expr_list.append(self.expr)
             self.expr = Rule()
+            self.skip_ws()
         return self.expr_list
 
 
