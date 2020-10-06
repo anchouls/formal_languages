@@ -111,6 +111,7 @@ class Parser:
         return left
 
     def parser(self):
+        self.skip_ws()
         while self.rest != '':
             self.head()
             if self.expect('.'):
