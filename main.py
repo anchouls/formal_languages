@@ -1,3 +1,5 @@
+import sys
+
 class Expression:
     def __init__(self, left, right, op):
         self.left = left
@@ -44,7 +46,8 @@ class Parser:
         self.skip_ws()
         if len(sub) > len(self.rest):
             if hard:
-                raise IOError("Syntax error: line {}, colon {}".format(self.row, self.col))
+                print("Syntax error: line {}, colon {}".format(self.row, self.col))
+                exit(0)
             else:
                 return False
         sub_rest = self.rest[:len(sub)]
@@ -56,7 +59,8 @@ class Parser:
             return sub == sub_rest
         else:
             if sub != sub_rest:
-                raise IOError("Syntax error: line {}, colon {}".format(self.row, self.col))
+                print("Syntax error: line {}, colon {}".format(self.row, self.col))
+                exit(0)
 
     def parse_word(self):
         self.skip_ws()
@@ -70,7 +74,8 @@ class Parser:
                 break
         self.skip_ws()
         if word == '':
-            raise IOError("Syntax error: line {}, colon {}".format(self.row, self.col))
+            print("Syntax error: line {}, colon {}".format(self.row, self.col))
+            exit(0)
         return Expression(None, None, word)
 
     def word(self):
@@ -88,7 +93,8 @@ class Parser:
         if self.expect(','):
             right = self.conj()
             if right is None:
-                raise IOError("Syntax error: line {}, colon {}".format(self.row, self.col))
+                print("Syntax error: line {}, colon {}".format(self.row, self.col))
+                exit(0)
             return Expression(left, right, ',')
         return left
 
@@ -97,7 +103,8 @@ class Parser:
         if self.expect(';'):
             right = self.disj()
             if right is None:
-                raise IOError("Syntax error: line {}, colon {}".format(self.row, self.col))
+                print("Syntax error: line {}, colon {}".format(self.row, self.col))
+                exit(0)
             return Expression(left, right, ';')
         return left
 
@@ -110,7 +117,8 @@ class Parser:
                 self.expect(":-", True)
                 res = self.disj()
                 if res is None:
-                    raise IOError("Syntax error: line {}, colon {}".format(self.row, self.col))
+                    print("Syntax error: line {}, colon {}".format(self.row, self.col))
+                    exit(0)
                 self.expect('.', True)
                 self.expr.body = res
             self.expr_list.append(self.expr)
@@ -118,7 +126,11 @@ class Parser:
         return self.expr_list
 
 
-with open("data.prolog", "r") as reader:
-    data = reader.read()
-    parser = Parser(data)
-    print(*parser.parser(), sep='\n')
+if len(sys.argv) != 2:
+    print("Передайте в аргументы название файла с прологом")
+else:
+    file_name = sys.argv[1]
+    with open(file_name, "r") as reader:
+        data = reader.read()
+        parser = Parser(data)
+        print(*parser.parser(), sep='\n')
