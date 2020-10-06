@@ -1,8 +1,9 @@
-abc:-a,b,c.
-abc:-a;v,c.
-a.
-b.
-c:-v,v.
-c:-b.
-v:-a;b.
+abc :- fgh.
 
+f :- (
+           (gh, kl)
+	; (qw, po)
+
+
+   ; k) ;
+   					p.

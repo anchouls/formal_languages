@@ -26,7 +26,8 @@ class Parser:
     def __init__(self, string: str):
         self.rest: str = string
         self.expr = Rule()
-        self.alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        self.alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+        self.alphabet_digits = self.alphabet + "0123456789"
         self.row = 1
         self.col = 1
         self.expr_list = []
@@ -34,7 +35,7 @@ class Parser:
     def skip_ws(self):
         last = len(self.rest)
         for id, i in enumerate(self.rest):
-            if i == ' ':
+            if i == ' ' or i == '\t':
                 self.col += 1
             elif i == '\n':
                 self.row += 1
@@ -68,7 +69,7 @@ class Parser:
         self.skip_ws()
         word = ''
         for id, i in enumerate(self.rest):
-            if i in self.alphabet:
+            if (id == 0 and i in self.alphabet) or (id != 0 and i in self.alphabet_digits):
                 word += i
             else:
                 self.rest = self.rest[id:]
