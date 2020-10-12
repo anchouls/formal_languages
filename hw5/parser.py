@@ -73,6 +73,7 @@ def p_ids(p):
 
 def p_error(p):
     print('Syntax error')
+    exit(0)
 
 
 parser = yacc.yacc()
